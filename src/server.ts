@@ -49,7 +49,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       res.on('finish', () => deleteLocalFiles([imagePath]))
     } catch (error) {
       res.status(422).send("cannot read image_url")
-    }
+    } 
 
   });
 
