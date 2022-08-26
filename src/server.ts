@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
@@ -13,7 +13,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  app.get("/", (req ,res) => {
+  app.get("/", (req, res) => {
     res.status(200).send("Server is up and running, you can pass any image url");
   })
 
@@ -42,10 +42,15 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
     if (!image_url) {
       res.status(400).send("image url is required")
     }
-    const imagePath = await filterImageFromURL(image_url)
-    console.log(imagePath)
-    res.status(200).sendFile(imagePath)
-    res.on('finish',()=>deleteLocalFiles([imagePath])) 
+    try {
+      const imagePath: string = await filterImageFromURL(image_url)
+      console.log(imagePath)
+      res.status(200).sendFile(imagePath)
+      res.on('finish', () => deleteLocalFiles([imagePath]))
+    } catch (error) {
+      res.status(422).send("cannot read image_url")
+    }
+
   });
 
 
