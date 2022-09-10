@@ -1,7 +1,8 @@
 import express, { response } from 'express';
 import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
-
+import { Request } from 'express';
+import { Response } from 'express';
 (async () => {
 
   // Init the Express application
@@ -13,7 +14,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  app.get("/", (req, res) => {
+  app.get("/", (req:Request, res:Response) => {
     res.status(200).send("Server is up and running, you can pass any image url");
   })
 
@@ -37,10 +38,10 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   // Root Endpoint
   // Displays a simple message to the user ?image_url={{}}
-  app.get("/filteredimage", async (req, res) => {
+  app.get("/filteredimage", async (req:Request, res:Response) => {
 
      //    1. validate the image_url query
-    let { image_url } = req.query.image_url
+    let { image_url }:{image_url:string} = req.query.image_url
 
     try {
       if (!image_url) {
